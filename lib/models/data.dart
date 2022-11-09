@@ -7,7 +7,7 @@ class DataModel {
   @HiveField(0)
   final String? kk;
   @HiveField(1)
-  final String? nama;
+  late final String? nama;
   @HiveField(2)
   final int? jumlahKeluarga;
   @HiveField(3)

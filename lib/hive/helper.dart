@@ -9,8 +9,9 @@ class HiveHelper {
     return true;
   }
 
-  Future<bool> update() async {
-    return false;
+  Future<bool> update(int index, DataModel value) async {
+    box.putAt(index, value);
+    return true;
   }
 
   Future<bool> delete(int index) async {
@@ -24,5 +25,9 @@ class HiveHelper {
       data.add(item);
     }
     return data;
+  }
+
+  Future<DataModel?> getDetilData(int index) async {
+    return box.getAt(index);
   }
 }

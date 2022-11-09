@@ -29,6 +29,16 @@ class _EditFormPageState extends State<EditFormPage> {
 
   @override
   void initState() {
+    HiveHelper().getDetilData(widget.indexHive).then((DataModel? value) {
+      kkController.text = value!.kk!.toString();
+      namaKkController.text = value.nama.toString();
+      jmlKeluargaController.text = value.jumlahKeluarga.toString();
+      alamatController.text = value.alamat.toString();
+      currentLocation = value.location.toString();
+      pathFoto = value.foto.toString();
+      setState(() {});
+    });
+
     super.initState();
   }
 
@@ -118,48 +128,21 @@ class _EditFormPageState extends State<EditFormPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    style: TextButton.styleFrom(alignment: Alignment.centerLeft),
-                    onPressed: loadingGetLocation
-                        ? null
-                        : () async {
-                            setState(() {
-                              loadingGetLocation = !loadingGetLocation;
-                            });
-                            final position = await Helper().getCurrentPosition(geolocatorPlatform);
-                            setState(() {
-                              loadingGetLocation = !loadingGetLocation;
-                              currentLocation = position;
-                            });
-                          },
-                    child: Row(
-                      children: const [
-                        Icon(Icons.location_on),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Lokasi Sekarang',
-                        ),
-                      ],
+                Row(
+                  children: const [
+                    Icon(Icons.location_on),
+                    Text(
+                      'Lokasi Sekarang',
                     ),
-                  ),
+                  ],
                 ),
-                if (loadingGetLocation)
-                  const Text(
-                    'Mencari lokasi...',
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                  child: Text(
+                    currentLocation!,
                     textAlign: TextAlign.start,
                   ),
-                if (currentLocation != null && currentLocation!.isNotEmpty && !loadingGetLocation)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    child: Text(
-                      currentLocation!,
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
+                ),
                 const SizedBox(
                   height: 2,
                 ),
@@ -201,18 +184,6 @@ class _EditFormPageState extends State<EditFormPage> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: TextButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => const DaftarSensus()),
-                      ),
-                    ),
-                    child: const Text('Lihat Daftar'),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
@@ -232,7 +203,8 @@ class _EditFormPageState extends State<EditFormPage> {
                             ),
                           );
                         } else {
-                          final result = await HiveHelper().insert(
+                          final result = await HiveHelper().update(
+                            widget.indexHive,
                             DataModel(
                               kk: kkController.text,
                               nama: namaKkController.text,
@@ -243,14 +215,6 @@ class _EditFormPageState extends State<EditFormPage> {
                             ),
                           );
 
-                          formKey.currentState!.reset();
-                          kkController.text = '';
-                          namaKkController.text = '';
-                          jmlKeluargaController.text = '';
-                          alamatController.text = '';
-                          pathFoto = null;
-                          currentLocation = null;
-
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(result ? 'Berhasil simpan' : 'Gagal simpan'),
@@ -258,7 +222,8 @@ class _EditFormPageState extends State<EditFormPage> {
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
-                          setState(() {});
+
+                          Navigator.pop(context);
                         }
                       }
                     },
