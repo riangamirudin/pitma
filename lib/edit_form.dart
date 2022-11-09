@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:project/helper.dart';
 import 'package:project/hive/helper.dart';
 import 'package:project/daftar_sensus.dart';
 import 'package:project/models/data.dart';
 
-class FormPage extends StatefulWidget {
-  const FormPage({Key? key, required this.title}) : super(key: key);
+class EditFormPage extends StatefulWidget {
+  final int indexHive;
+  const EditFormPage({Key? key, required this.title, required this.indexHive}) : super(key: key);
 
   final String title;
 
   @override
-  State<FormPage> createState() => _FormPageState();
+  State<EditFormPage> createState() => _EditFormPageState();
 }
 
-class _FormPageState extends State<FormPage> {
+class _EditFormPageState extends State<EditFormPage> {
   final TextEditingController kkController = TextEditingController();
   final TextEditingController namaKkController = TextEditingController();
   final TextEditingController jmlKeluargaController = TextEditingController();

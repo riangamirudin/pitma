@@ -13,8 +13,9 @@ class HiveHelper {
     return false;
   }
 
-  Future<bool> delete() async {
-    return false;
+  Future<bool> delete(int index) async {
+    box.deleteAt(index);
+    return true;
   }
 
   Future<List<DataModel>> getData() async {
